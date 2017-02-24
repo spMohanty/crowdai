@@ -1,0 +1,56 @@
+<div class='table-responsive'>
+  <table class='table table-hover table-striped table-bordered leaderboard sortable'>
+    <thead>
+      <tr>
+        <% if challenge.api_required  %>
+          <th>API</th>
+        <% end %>
+        <% if challenge.secondary_sort_order == :not_used %>
+          <th><%= challenge.score_title %></th>
+        <% else %>
+          <th><%= challenge.score_title %></th>
+          <th><%= challenge.score_secondary_title %></th>
+        <% end %>
+        <th>Submitted</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% submissions.each do |submission| %>
+      <tr>
+        <% if challenge.api_required %>
+          <td><%= Submission::APIS[submission.api] %></td>
+        <% end %>
+
+        <% if challenge.secondary_sort_order == :not_used %>
+          <% if submission.failed? %>
+            <td><%= submission.grading_message %></td>
+          <% else %>
+            <td>
+              <% if submission.graded? %>
+                <%= link_to submission.score, challenge_submission_path(challenge, submission) %>
+              <% end %>
+            </td>
+          <% end %>
+        <% else %>
+          <% if submission.failed? %>
+            <td colspan="2"><%= submission.grading_message %></td>
+          <% else %>
+            <td>
+              <% if submission.graded? %>
+                <%= link_to submission.score, challenge_submission_path(challenge, submission) %>
+              <% end %>
+            </td>
+            <td>
+              <% if submission.graded? %>
+                <%= link_to submission.score_secondary, challenge_submission_path(challenge, submission) %>
+              <% end %>
+            </td>
+          <% end %>
+        <% end %>
+        <td><%= link_to submission.created_at, challenge_submission_path(challenge, submission) %></td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div><!-- table-responsive -->

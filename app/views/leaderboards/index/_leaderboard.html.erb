@@ -7,7 +7,7 @@
           <th>Video</th>
         <% end %>
         <th>Participant</th>
-        <% if challenge.secondary_sort_order == 'not_used' %>
+        <% if challenge.secondary_sort_order == :not_used %>
           <th><%= challenge.score_title %></th>
         <% else %>
           <th><%= challenge.score_title %></th>
@@ -40,23 +40,13 @@
               <%= leader.participant.name %>
             <% end %>
           </td>
-        <% if challenge.completed? %>
-          <% if challenge.secondary_sort_order == 'not_used' %>
+          <% if challenge.secondary_sort_order == :not_used %>
             <td class="score"><%= link_to leader.score, challenge_submissions_path(leader.challenge_id, participant_id: leader.participant_id) %></td>
           <% else %>
             <td class="score"><%= link_to leader.score, challenge_submissions_path(leader.challenge_id, participant_id: leader.participant_id) %></td>
             <td class="score"><%= link_to leader.score_secondary, challenge_submissions_path(leader.challenge_id, participant_id: leader.participant_id) %></td>
           <% end %>
           <td><%= link_to leader.entries, challenge_submissions_path(leader.challenge_id, participant_id: leader.participant_id) %></td>
-        <% else %>
-          <% if challenge.secondary_sort_order == 'not_used' %>
-            <td class="score"><%= leader.score %></td>
-          <% else %>
-            <td class="score"><%= leader.score %></td>
-            <td class="score"><%= leader.score_secondary %></td>
-          <% end %>
-          <td><%= leader.entries %></td>
-        <% end %>
         <td><%= leader.created_at.strftime("%a, %e %b %Y %R") %></td>
       </tr>
       <% end %>

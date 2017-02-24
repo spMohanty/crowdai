@@ -7,12 +7,15 @@ class SubmissionsController < ApplicationController
   respond_to :html, :js
 
   def index
-    if params[:participant_id] && @challenge.completed?
+    if params[:participant_id]
       @participant = Participant.find(params[:participant_id])
-      @submissions = Submission.where(challenge_id: @challenge.id, participant_id: params[:participant_id], grading_status_cd: 'graded')
     else
-      @submissions = current_participant.submissions.where(challenge_id: @challenge.id)
+      @participant = current_participant
     end
+    submissions = @participant.submissions.where(challenge_id: @challenge.id)
+    @s = SubmissionTablePresenter.new(submissions: submissions,challenge: @challenge).attach_controller(self)
+    Rails.logger.debug @s.header_cols
+    byebug
     load_gon({percent_progress: @challenge.pct_passed})
   end
 
