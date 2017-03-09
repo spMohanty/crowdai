@@ -11,7 +11,7 @@ class PostNotificationJob < BaseJob
 
 
   def subscribed_participant_ids(post)
-    ids = admin_ids.concat(post_participant_ids(post)).concat(all_participants)
+    ids = admin_ids.concat(post_participant_ids(post))
     ids.uniq
   end
 
@@ -25,12 +25,6 @@ class PostNotificationJob < BaseJob
     Post.joins("LEFT JOIN email_preferences ON posts.participant_id = email_preferences.participant_id")
         .where(posts: {topic_id: post.topic_id}, email_preferences: { my_topic_post: true })
         .pluck(:participant_id)
-  end
-
-  def all_participants
-     Participant.joins(:email_preferences)
-                .where(participants: {admin: false}, email_preferences: {any_post: true})
-                .pluck(:participant_id)
   end
 
 

@@ -8,7 +8,7 @@ class LeaderboardNotificationJob < BaseJob
   end
 
   def subscribed_participant_ids(submission)
-    ids = admin_ids.concat(challenge_participant_ids(submission)).concat(all_participants)
+    ids = admin_ids.concat(challenge_participant_ids(submission))
     ids.uniq
   end
 
@@ -25,12 +25,5 @@ class LeaderboardNotificationJob < BaseJob
         .pluck(:participant_id)
   end
 
-
-  def all_participants
-     Participant
-        .joins(:email_preferences)
-        .where(email_preferences: { any_leaderboard: true })
-        .pluck(:participant_id)
-  end
 
 end
